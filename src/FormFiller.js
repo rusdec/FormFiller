@@ -9,9 +9,12 @@ formfiller.loadForm();
  */
 function FormFiller() {
 
-    var _version = '0.1.13';
+    var _version = '0.1.13.rusdec';
     var _context = this;
     this.jsCode = 'javascript:/* FormFiller v' + _version + ' */var d=document;function i(a){return d.getElementById(a)}function n(a){return d.getElementsByName(a)[0]}function e(a){t=\'change\';if(window.navigator.userAgent.match(/Trident|MSIE\s/g)!=null){x=d.createEvent(\'Events\');x.initEvent(t,1,0);}else{x=new Event(t);}a.dispatchEvent(x);}function v(a,v){a.value=v;e(a)}function c(a){a.checked=true;e(a)}';
+    // select2 begin
+    this.jsCode += 'function s2o(n,o,ti){setTimeout(()=>{s2=document.querySelector(`select[name="${n}"]`);s2.insertAdjacentHTML("afterbegin",o);s2.options[0].selected=true;s2.dispatchEvent(new Event("change"))},ti)}';
+    // select2 end
     this.loadForm = function () {
         _loadJQuery();
     };
@@ -45,6 +48,16 @@ function FormFiller() {
                 }
             }
         });
+
+        // select2 begin
+        var ti=0;
+        jQuery('form span.select2:not(:hidden)').each(function() {
+            var select = this.previousSibling;
+            formfiller.jsCode += `s2o('${_getName(select)}','${_getSelectedOption(select).outerHTML}',${ti});`;
+            ti+=1000;
+        });
+        // select2 end
+
         jQuery('#bookmarklet').attr('href', this.jsCode + 'void(0);').html(jQuery('#formfiller-bookmarkletname').val()).parent('p').show();
         jQuery('#formfiller-formwrapper').hide();
     };
@@ -85,6 +98,12 @@ function FormFiller() {
         var value = jQuery(element).val();
         return (value === null) ? '' : value.replace(/"/g, '\\"').replace(/(\r\n|\n|\r)/gm, '\\r\\n');
     };
+
+    // select2 begin
+    var _getSelectedOption = function (select) {
+        return select.selectedOptions[0];
+    }
+    // select2 end
 
 }
 
