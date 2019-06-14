@@ -8,3 +8,4 @@ The cross-browser Javascript bookmarklet for saving and re-populating forms
 ```javascript
 javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://rawgit.com/wearecontrast/FormFiller/master/src/FormFiller.js';})();
 ```
+rusdec: Добавил поддержку select2
